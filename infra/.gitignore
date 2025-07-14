@@ -9,3 +9,4 @@ cdk.out
 
 # not ignore
 !lib/functions/basic-auth.js
+!lib/functions/ip-restriction.js
