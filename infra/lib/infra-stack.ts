@@ -14,10 +14,27 @@ export class InfraStack extends cdk.Stack {
       autoDeleteObjects: true,
     });
 
+    const basicAuthFunction = new cloudfront.Function(
+      this,
+      "BasicAuthFunction",
+      {
+        functionName: `basic-authentication`,
+        code: cloudfront.FunctionCode.fromFile({
+          filePath: "./lib/functions/basic-auth.js",
+        }),
+      }
+    );
+
     const distribution = new cloudfront.Distribution(this, 'WebsiteDistribution', {
       defaultRootObject: 'index.html',
       defaultBehavior: {
-        origin: origins.S3BucketOrigin.withOriginAccessControl(destinationBucket)
+        origin: origins.S3BucketOrigin.withOriginAccessControl(destinationBucket),
+        functionAssociations: [
+          {
+            function: basicAuthFunction,
+            eventType: cloudfront.FunctionEventType.VIEWER_REQUEST,
+          },
+        ],
       }
     });
 
@@ -33,3 +50,4 @@ export class InfraStack extends cdk.Stack {
     });
   }
 }
+
