@@ -17,7 +17,7 @@ export class InfraStack extends cdk.Stack {
     const distribution = new cloudfront.Distribution(this, 'WebsiteDistribution', {
       defaultRootObject: 'index.html',
       defaultBehavior: {
-        origin: origins.S3BucketOrigin.withBucketDefaults(destinationBucket)
+        origin: origins.S3BucketOrigin.withOriginAccessControl(destinationBucket)
       }
     });
 
